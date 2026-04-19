@@ -1,0 +1,5 @@
+{
+  "name": "RobotOptAI",
+  "description": "Simulated Franka Panda executing pick and place with OpenAI-guided controller design and numeric optimization.",
+  "requestFramePermissions": []
+}
