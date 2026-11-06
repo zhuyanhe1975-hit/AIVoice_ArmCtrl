@@ -42,9 +42,12 @@ export class RobotLoader {
 
         const isDouble = false;
         const isStacking = robotId === 'franka_panda_stack';
-        // Use local assets if available, otherwise fallback to remote
+        // Use local assets if available, otherwise fallback to remote.
+        // BASE_URL is "/" in local dev and "/AIVoice_ArmCtrl/" on GitHub Pages.
         const currentRobotId = isStacking ? 'franka_emika_panda' : robotId;
-        const baseUrl = `/assets/${currentRobotId}/`;
+        const pagesBase = import.meta.env.BASE_URL || '/';
+        const normalizedBase = pagesBase.endsWith('/') ? pagesBase : `${pagesBase}/`;
+        const baseUrl = `${normalizedBase}assets/${currentRobotId}/`;
         const remoteBaseUrl = `https://raw.githubusercontent.com/google-deepmind/mujoco_menagerie/main/${currentRobotId}/`;
 
         const downloaded = new Set<string>(); // Keep track to avoid re-downloading same file twice
