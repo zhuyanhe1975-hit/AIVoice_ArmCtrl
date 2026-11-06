@@ -244,6 +244,7 @@ function buildFallbackVoiceInterpretation(text: string): VoiceCommandInterpretat
       targetRegion: mentionsLeft ? 'left' : mentionsRight ? 'right' : 'center',
       confidence: 0.64,
       reasoning: 'Fallback parser interpreted the command as taking the block out to an outside placement zone.',
+      source: 'fallback',
     };
   }
 
@@ -255,6 +256,7 @@ function buildFallbackVoiceInterpretation(text: string): VoiceCommandInterpretat
       targetRegion: mentionsLeft ? 'left' : mentionsRight ? 'right' : 'center',
       confidence: 0.62,
       reasoning: 'Fallback parser matched movement, object, and tray keywords.',
+      source: 'fallback',
     };
   }
 
@@ -265,6 +267,7 @@ function buildFallbackVoiceInterpretation(text: string): VoiceCommandInterpretat
     targetRegion: 'unknown',
     confidence: 0.2,
     reasoning: 'Fallback parser could not confidently interpret the command.',
+    source: 'fallback',
     clarificationQuestion: '请再说一次，比如“把红色块放到收纳栏的中间”。',
   };
 }
@@ -606,7 +609,8 @@ export function App() {
       setVoicePlanSource(visionReply?.source ?? taskPlan.source ?? 'fallback');
       setVoiceStatus('idle');
       setVoiceMessage(
-        visionReply?.reply ?? '我现在看到机械臂、红色木块和收纳栏，但这次视觉描述没有成功返回。'
+        visionReply?.reply ??
+          '视觉描述需要本机决策服务。当前页面仍可查看仿真，并用内置指令解析执行抓放。'
       );
       return;
     }
@@ -817,10 +821,15 @@ export function App() {
           transition={{ duration: 0.45, ease: 'easeOut' }}
           className="pointer-events-auto absolute left-4 right-4 top-4 md:left-6 md:right-6 md:top-6"
         >
-          <div className="minimal-topbar">
-            <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-sky-200">
-              <Zap className="h-3.5 w-3.5" />
-              MuJoCo WASM RL Lab
+            <div className="minimal-topbar">
+            <div>
+              <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-sky-200">
+                <Zap className="h-3.5 w-3.5" />
+                MuJoCo WASM RL Lab
+              </div>
+              <p className="hosted-note">
+                仿真可在浏览器中直接查看。完整语音自主（oMLX / OpenAI 决策与视觉规划）需要本机后端。
+              </p>
             </div>
             <div className="minimal-links">
               <button className="link-button" onClick={() => setShowLibrary((value) => !value)}>模型库</button>
@@ -928,6 +937,10 @@ export function App() {
                     <div className="flex gap-3">
                       <Bot className="mt-1 h-4 w-4 shrink-0 text-cyan-300" />
                       <p>默认主屏幕只展示可交互的仿真背景，额外信息通过点击入口再展开。</p>
+                    </div>
+                    <div className="mt-3 flex gap-3">
+                      <Bot className="mt-1 h-4 w-4 shrink-0 text-sky-300" />
+                      <p>GitHub Pages 只托管浏览器仿真和内置语音兜底。完整自主决策与视觉规划需要在本机启动后端，不需要把 API key 放进页面。</p>
                     </div>
                     <div className="mt-3 flex gap-3">
                       <Cpu className="mt-1 h-4 w-4 shrink-0 text-orange-300" />
